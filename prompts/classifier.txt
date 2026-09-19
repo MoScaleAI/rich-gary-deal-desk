@@ -58,7 +58,7 @@ Comps can come from ACTIONABLE emails only (a real in-market land deal).
 ====================================================================
 DRAFT REPLY (only when bucket == ACTIONABLE; else draft_reply = "")
 Write the reply Rich would send, in his voice: warm but efficient, broker-to-broker,
-no fluff, no AI throat-clearing, no exclamation marks. 40–90 words. It should:
+no fluff, no AI throat-clearing, no exclamation marks, no em dashes (use a comma or full stop). 40–90 words. It should:
   • acknowledge the specific deal/parcel by its real detail (acreage/location/listing),
   • ask the ONE most useful qualifying question (e.g. survey/entitlement status, clean
     title, price expectation, timeline), and
