@@ -1,1 +1,254 @@
-<!doctype html><meta charset=utf-8><title>Deal Desk</title><p>Provisioning…</p>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Daily Deal Desk</title>
+<style>
+  :root{
+    --bg:#f6f5f1; --panel:#ffffff; --ink:#1a1c1a; --muted:#6b7069; --line:#e5e3db;
+    --accent:#1f5c3d; --accent-ink:#ffffff; --accent-soft:#e7f0ea;
+    --amber:#9a6b00; --amber-soft:#fbf0d6; --amber-line:#e8d3a0;
+    --slate:#5b6570; --shadow:0 1px 2px rgba(20,25,20,.05),0 8px 24px rgba(20,25,20,.05);
+    --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1210; --panel:#171b18; --ink:#e8eae6; --muted:#9aa199; --line:#262b26;
+      --accent:#4fae7e; --accent-ink:#08160f; --accent-soft:#16271e;
+      --amber:#e3b95e; --amber-soft:#2a2312; --amber-line:#4a3c1a;
+      --slate:#9aa5af; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:28px 20px 64px}
+  header.top{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:22px}
+  .brand h1{font-size:22px; margin:0; letter-spacing:-.01em; font-weight:650}
+  .brand .sub{color:var(--muted); font-size:13px; margin-top:2px}
+  .when{text-align:right}
+  .when .date{font-size:14px; font-weight:600}
+  .when .upd{color:var(--muted); font-size:12px; margin-top:2px}
+  .chips{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:26px}
+  .chip{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; box-shadow:var(--shadow)}
+  .chip .n{font-size:26px; font-weight:680; letter-spacing:-.02em; line-height:1}
+  .chip .l{color:var(--muted); font-size:12px; margin-top:6px; text-transform:uppercase; letter-spacing:.04em}
+  .chip.actionable{background:var(--accent-soft); border-color:transparent}
+  .chip.actionable .n{color:var(--accent)}
+  .grid{display:grid; grid-template-columns:1.62fr 1fr; gap:22px; align-items:start}
+  @media (max-width:900px){ .grid{grid-template-columns:1fr} .chips{grid-template-columns:repeat(2,1fr)} }
+  .group{margin-bottom:18px}
+  .group h2{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+    display:flex; align-items:center; gap:8px; margin:0 2px 10px; cursor:pointer; user-select:none}
+  .group h2 .ct{color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:1px 8px; font-size:11px}
+  .group h2 .caret{margin-left:auto; transition:transform .15s ease; color:var(--muted)}
+  .group.collapsed .caret{transform:rotate(-90deg)}
+  .group.collapsed .cards{display:none}
+  .cards{display:flex; flex-direction:column; gap:10px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow)}
+  .card .row1{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
+  .card .from{font-weight:640}
+  .card .email{color:var(--muted); font-size:12px}
+  .card .subj{margin:4px 0 0; font-size:15px}
+  .card .reason{color:var(--muted); font-size:13px; margin-top:6px}
+  .card .meta{display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap}
+  .dot{width:8px; height:8px; border-radius:50%; display:inline-block}
+  .b-ACTIONABLE .dot{background:var(--accent)} .b-OUT_OF_PRODUCT .dot{background:var(--slate)}
+  .b-OUT_OF_MARKET .dot{background:#b08968} .b-SPAM .dot{background:#c05b5b}
+  .tag{font-size:11px; color:var(--muted)}
+  .pill{font-size:11px; padding:2px 9px; border-radius:20px; font-weight:600}
+  .pill.low{background:var(--amber-soft); color:var(--amber); border:1px solid var(--amber-line)}
+  .action{color:var(--muted); font-size:12px; margin-left:auto}
+  .btn{font:inherit; font-size:13px; font-weight:600; border-radius:9px; padding:8px 14px; cursor:pointer; border:1px solid transparent}
+  .btn.primary{background:var(--accent); color:var(--accent-ink)}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn.ghost{background:transparent; color:var(--accent); border-color:var(--line)}
+  .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .draftbox{margin-top:12px; border:1px solid var(--line); border-radius:10px; background:var(--bg); padding:12px 14px}
+  .draftbox .txt{white-space:pre-wrap; font-size:14px}
+  .draftbox .foot{display:flex; align-items:center; gap:12px; margin-top:10px}
+  .draftbox .note{color:var(--muted); font-size:12px; margin-left:auto}
+  .drafting{color:var(--muted); font-size:13px; font-style:italic}
+  aside.comps{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 16px 8px; box-shadow:var(--shadow); position:sticky; top:20px; max-height:calc(100vh - 40px); overflow:auto}
+  aside.comps h3{margin:0 0 4px; font-size:15px}
+  aside.comps .intro{color:var(--muted); font-size:12.5px; margin:0 0 14px}
+  .comp{border-top:1px solid var(--line); padding:12px 0}
+  .comp:first-of-type{border-top:none}
+  .comp .loc{font-weight:640; font-size:14px}
+  .comp .type{color:var(--muted); font-size:12px; margin-top:1px}
+  .comp .nums{display:flex; gap:14px; flex-wrap:wrap; margin-top:8px}
+  .comp .nums b{font-size:15px; font-weight:680} .comp .nums .k{color:var(--muted); font-size:11px; display:block; text-transform:uppercase; letter-spacing:.03em}
+  .comp .quote{color:var(--muted); font-size:12.5px; font-style:italic; margin-top:8px}
+  .comp .src{color:var(--muted); font-size:11px; margin-top:6px; opacity:.8}
+  .state{padding:60px 20px; text-align:center; color:var(--muted)}
+  .skel{height:74px; border-radius:var(--radius); background:linear-gradient(90deg,var(--line),var(--panel),var(--line)); background-size:200% 100%; animation:sh 1.3s infinite; margin-bottom:10px}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .foot-note{color:var(--muted); font-size:12px; margin-top:26px; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Daily Deal Desk</h1>
+      <div class="sub">Joe Williams Land Bank Fund</div>
+    </div>
+    <div class="when">
+      <div class="date" id="date">&nbsp;</div>
+      <div class="upd" id="upd"></div>
+    </div>
+  </header>
+  <div class="chips" id="chips"></div>
+  <div class="grid">
+    <main id="list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></main>
+    <aside class="comps">
+      <h3>Comps captured</h3>
+      <p class="intro">Private pricing pulled from inbound land emails. Texas is a non-disclosure state, so these are yours alone.</p>
+      <div id="comps"><div class="skel" style="height:60px"></div><div class="skel" style="height:60px"></div></div>
+    </aside>
+  </div>
+  <div class="foot-note">Demo running on a sample inbox. A read-only inbox connection points this at live email with a one-node change.</div>
+</div>
+
+<script>
+const BASE = "https://mtwqsmkplsytmblxzxmu.supabase.co/functions/v1/deal-desk";
+const GROUPS = [
+  {key:"ACTIONABLE", label:"Actionable today", open:true},
+  {key:"OUT_OF_PRODUCT", label:"Out of product", open:false},
+  {key:"OUT_OF_MARKET", label:"Out of market", open:false},
+  {key:"SPAM", label:"Filtered / spam", open:false},
+];
+const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => {
+  if(n==null||isNaN(n)) return null;
+  n=Number(n);
+  if(n>=1e6) return "$"+(n/1e6).toFixed(2).replace(/\.00$/,"")+"M";
+  return "$"+Math.round(n).toLocaleString("en-US");
+};
+const perAcre = n => n==null||isNaN(n) ? null : "$"+Math.round(n).toLocaleString("en-US")+"/ac";
+
+function fmtDate(iso){
+  try{ const d=new Date(iso); return d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"}); }catch(e){ return ""; }
+}
+function fmtTime(iso){ try{ return "Updated "+new Date(iso).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}); }catch(e){ return ""; } }
+
+async function load(){
+  let data;
+  try{ const r = await fetch(BASE,{cache:"no-store"}); data = await r.json(); }
+  catch(e){ document.getElementById("list").innerHTML='<div class="state">Could not load the desk. Refresh in a moment.</div>'; return; }
+  render(data);
+}
+
+function render(data){
+  document.getElementById("date").textContent = fmtDate(data.generated_at);
+  document.getElementById("upd").textContent = fmtTime(data.generated_at);
+  const c = data.counts||{};
+  document.getElementById("chips").innerHTML = [
+    ["actionable","Actionable", c.ACTIONABLE||0],
+    ["","Out of product", c.OUT_OF_PRODUCT||0],
+    ["","Out of market", c.OUT_OF_MARKET||0],
+    ["","Filtered", c.SPAM||0],
+  ].map(([cls,l,n])=>`<div class="chip ${cls}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+
+  const byBucket = {};
+  (data.items||[]).forEach(it=>{ (byBucket[it.bucket]=byBucket[it.bucket]||[]).push(it); });
+  const list = document.getElementById("list");
+  list.innerHTML = GROUPS.map(g=>{
+    const items = byBucket[g.key]||[];
+    if(!items.length) return "";
+    return `<section class="group ${g.open?"":"collapsed"}" data-key="${g.key}">
+      <h2>${g.label} <span class="ct">${items.length}</span><span class="caret">▾</span></h2>
+      <div class="cards">${items.map(card).join("")}</div>
+    </section>`;
+  }).join("") || '<div class="state">No emails.</div>';
+
+  list.querySelectorAll(".group h2").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("collapsed")));
+  list.querySelectorAll("[data-draft]").forEach(b=>b.addEventListener("click",onDraft));
+  list.querySelectorAll("[data-regen]").forEach(b=>b.addEventListener("click",onRegen));
+  list.addEventListener("click",e=>{ const cp=e.target.closest("[data-copy]"); if(cp) doCopy(cp); });
+
+  const comps = data.comps||[];
+  document.getElementById("comps").innerHTML = comps.length ? comps.map(compRow).join("")
+    : '<p class="intro">No comps captured yet.</p>';
+}
+
+function card(it){
+  const low = it.confidence==="low";
+  const isAct = it.bucket==="ACTIONABLE";
+  const draft = it.draft_reply||"";
+  return `<article class="card b-${it.bucket}">
+    <div class="row1"><span class="from">${esc(it.from_name)}</span><span class="email">${esc(it.from_email)}</span></div>
+    <div class="subj">${esc(it.subject)}</div>
+    <div class="reason">${esc(it.reason)}</div>
+    <div class="meta">
+      <span class="dot"></span><span class="tag">${it.bucket.replace(/_/g," ").toLowerCase()}</span>
+      ${low?'<span class="pill low">Low confidence · confirm</span>':''}
+      <span class="action">${esc(it.suggested_action||"")}</span>
+    </div>
+    ${isAct?`<div class="meta"><button class="btn primary" data-draft="${it.email_id}">Draft reply</button></div>
+      <div class="draftbox" id="d-${it.email_id}" style="display:none">
+        <div class="txt">${esc(draft)}</div>
+        <div class="foot"><button class="btn ghost" data-copy="${it.email_id}">Copy</button>
+          <a href="#" class="btn ghost" data-regen="${it.email_id}">Regenerate live</a>
+          <span class="note">Offers a Teams meeting · ready to send from your inbox</span></div>
+      </div>`:''}
+  </article>`;
+}
+
+function compRow(c){
+  const nums=[];
+  if(c.acreage!=null) nums.push(`<div><span class="k">Acreage</span><b>${c.acreage} ac</b></div>`);
+  const pa=perAcre(c.price_per_acre); if(pa) nums.push(`<div><span class="k">Per acre</span><b>${pa}</b></div>`);
+  const ap=money(c.ask_price); if(ap) nums.push(`<div><span class="k">Ask</span><b>${ap}</b></div>`);
+  return `<div class="comp">
+    <div class="loc">${esc(c.location||c.address_or_parcel||"Land parcel")}</div>
+    <div class="type">${esc(c.property_type||"")}${c.address_or_parcel&&c.location?" · "+esc(c.address_or_parcel):""}</div>
+    ${nums.length?`<div class="nums">${nums.join("")}</div>`:""}
+    ${c.price_text?`<div class="quote">“${esc(c.price_text)}”</div>`:""}
+    <div class="src">from ${esc(c.source_email_id)}</div>
+  </div>`;
+}
+
+function showDraft(id, text){
+  const box=document.getElementById("d-"+id); if(!box) return;
+  box.style.display="block"; box.querySelector(".txt").textContent=text;
+}
+function onDraft(e){
+  const id=e.currentTarget.getAttribute("data-draft");
+  const box=document.getElementById("d-"+id); if(!box) return;
+  const txt=box.querySelector(".txt");
+  if(box.style.display==="none"){
+    box.style.display="block";
+    if(!txt.textContent.trim()) fetchDraft(id,false); // no stored draft -> generate live
+  } else { box.style.display="none"; }
+}
+function onRegen(e){ e.preventDefault(); fetchDraft(e.currentTarget.getAttribute("data-regen"), false); }
+
+async function fetchDraft(id, revealFirst){
+  const box=document.getElementById("d-"+id); if(!box) return;
+  box.style.display="block";
+  const txt=box.querySelector(".txt");
+  if(!txt.textContent || !revealFirst){ txt.innerHTML='<span class="drafting">Drafting…</span>'; }
+  try{
+    const r=await fetch(BASE+"/draft",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email_id:id})});
+    const j=await r.json();
+    if(j.draft_reply){ txt.textContent=j.draft_reply; box.dataset.loaded="1"; }
+    else { txt.textContent = "Could not draft right now."; }
+  }catch(e){ txt.textContent="Could not draft right now."; }
+}
+
+function doCopy(btn){
+  const box=btn.closest(".draftbox"); const t=box.querySelector(".txt").textContent;
+  navigator.clipboard.writeText(t).then(()=>{ const o=btn.textContent; btn.textContent="Copied"; setTimeout(()=>btn.textContent=o,1200); });
+}
+
+load();
+</script>
+</body>
+</html>
